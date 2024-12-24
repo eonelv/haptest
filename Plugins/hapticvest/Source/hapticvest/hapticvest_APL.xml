@@ -1,0 +1,221 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--Unreal Plugin Language. all node see Engine/Source/Programs/UnrealBuildTool/System/UnrealPluginLanguage.cs-->
+<!--
+* 	<androidManifestUpdates> </androidManifestUpdates>
+* 	<proguardAdditions>	</proguardAdditions>
+*
+* 	<AARImports> </AARImports>
+* 	<baseBuildGradleAdditions>  </baseBuildGradleAdditions>
+*
+*	<buildscriptGradleAdditions>  </buildscriptGradleAdditions>
+* 	<buildGradleAdditions>  </buildGradleAdditions>
+*
+* 	<buildXmlPropertyAdditions> </buildXmlPropertyAdditions>
+*
+* 	<prebuildCopies> </prebuildCopies>
+*
+* 	<resourceCopies> </resourceCopies>
+*
+* 	<gradleCopies> </gradleCopies>
+*
+* 	<gradleProperties> </gradleProperties>
+*
+* 	<gradleParameters> </gradleParameters>
+-->
+<root xmlns:android="http://schemas.android.com/apk/res/android">
+    <androidManifestUpdates>
+        <!--权限请求-->
+
+        <!--可选权限-->
+        <addPermission android:name="android.permission.BLUETOOTH"/>
+        <addPermission android:name="android.permission.BLUETOOTH_ADMIN"/>
+        <addPermission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+        <addPermission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
+        <addPermission android:name="android.permission.BLUETOOTH_CONNECT" />
+
+       <!--<addElements tag="application">
+            <uses-feature android:name="android.hardware.bluetooth_le" android:required="true"/>
+        </addElements>-->
+    </androidManifestUpdates>
+
+    <!--复制文件$S(PluginDir)=插件的build.cs所在目录. $S(BuildDir)打包输出的AndroidManifest.xml所在目录-->
+    <resourceCopies>
+        <copyDir src="$S(PluginDir)/Android/java/src/" dst="$S(BuildDir)/src/"/>
+        <copyDir src="$S(PluginDir)/Android/java/libs/" dst="$S(BuildDir)/libs/hap/"/>
+        
+    </resourceCopies>
+    
+    <!--添加Import语句到GameActivity-->
+    <gameActivityImportAdditions>
+        <insert>
+            import com.longjiu.ble.service.BleHelper;
+            import com.longjiu.ble.callback.BleInitCallback;
+            import com.longjiu.ble.callback.DeviceTransferCallback;
+            import com.longjiu.ble.callback.ScanCallback;
+            import com.longjiu.ble.callback.add.LPFN_HS_ArmorMoveResult;
+            import com.longjiu.ble.callback.add.LPFN_HS_CalibrationCompleteResult;
+            import com.longjiu.ble.callback.add.LPFN_HS_DeviceStateChanged;
+            import com.longjiu.ble.callback.add.LPFN_HS_GetPowerResult;
+            import com.longjiu.ble.callback.add.LPFN_HS_InfraredEntry;
+            import com.longjiu.ble.callback.add.LPFN_HS_InfraredSustained;
+            import com.longjiu.ble.callback.add.LPFN_HS_LegMoveResult;
+            import com.longjiu.ble.callback.add.LPFN_HS_PushButtonClick;
+            import com.longjiu.ble.callback.add.LPFN_HS_PushButtonStick;
+            import com.longjiu.ble.model.BleRssiDevice;
+            import com.longjiu.ble.model.DeviceEnum;
+            import com.longjiu.ble.service.ArmorDeviceService;
+
+            import cn.com.heaton.blelibrary.ble.BleLog;
+            import cn.com.heaton.blelibrary.ble.utils.ByteUtils;
+        </insert>
+    </gameActivityImportAdditions>
+
+    <!--添加代码到GameActivity-->
+    <gameActivityClassAdditions>
+    <insert>
+        public void initEvent() {
+        //        ArmorDeviceService.me().HS_SetPrecision(ArmorDeviceServiceInterface.MODULES_CLOTHING,20);
+        //        ArmorDeviceService.me().HS_Calibration(MODULES_CLOTHING);
+
+
+        ArmorDeviceService.me().HS_Init();
+
+
+        ArmorDeviceService.me().HS_DeviceStateChanged(new LPFN_HS_DeviceStateChanged() {
+        @Override
+        public void onResult(String address, boolean state) {
+        BleLog.e(TAG, "HS_DeviceStateChanged " + state);
+        }
+        });
+        ArmorDeviceService.me().HS_CalibrationCompleteResult(new LPFN_HS_CalibrationCompleteResult() {
+        @Override
+        public void onResult(int modules) {
+        BleLog.e(TAG, "HS_CalibrationCompleteResult " + modules);
+        }
+        });
+        ArmorDeviceService.me().HS_PowerResult(new LPFN_HS_GetPowerResult() {
+        @Override
+        public void onResult(int deviceMode, int power) {
+        BleLog.e(TAG, "HS_PowerResult " + power);
+        }
+        });
+        ArmorDeviceService.me().HS_SetArmorMoveResult(new LPFN_HS_ArmorMoveResult() {
+        @Override
+        public void onResult(double frontOrBack, double leftOrRight, double around) {
+        BleLog.e(TAG, "HS_SetArmorMoveResult " + frontOrBack + " " + leftOrRight + " " + around);
+        }
+        });
+        ArmorDeviceService.me().HS_PushButtonClick(new LPFN_HS_PushButtonClick() {
+        @Override
+        public void onResult(int buttonId, boolean state) {
+        if (buttonId == DeviceEnum.LeftButton.value) {
+        BleLog.e(TAG, "HS_PushButtonClick 左侧" + buttonId + " " + state);
+        } else if (buttonId == DeviceEnum.RightButton.value) {
+        BleLog.e(TAG, "HS_PushButtonClick 右侧" + buttonId + " " + state);
+        }
+        }
+        });
+        ArmorDeviceService.me().HS_PushButtonStick(new LPFN_HS_PushButtonStick() {
+        @Override
+        public void onResult(int buttonId) {
+        BleLog.e(TAG, "HS_PushButtonStick " + buttonId);
+        }
+        });
+        ArmorDeviceService.me().HS_InfraredEntry(new LPFN_HS_InfraredEntry() {
+        @Override
+        public void onResult(int buttonId, boolean state) {
+        if (buttonId == DeviceEnum.LeftButton.value) {
+        BleLog.e(TAG, "HS_InfraredEntry 左侧" + buttonId + " " + state);
+        } else if (buttonId == DeviceEnum.RightButton.value) {
+        BleLog.e(TAG, "HS_InfraredEntry 右侧" + buttonId + " " + state);
+        }
+        }
+        });
+        ArmorDeviceService.me().HS_InfraredSustained(new LPFN_HS_InfraredSustained() {
+        @Override
+        public void onResult(int buttonId) {
+        if (buttonId == DeviceEnum.LeftInfrared.value) {
+        BleLog.e(TAG, "HS_InfraredSustained 左侧" + buttonId);
+        } else if (buttonId == DeviceEnum.RightInfrared.value) {
+        BleLog.e(TAG, "HS_InfraredSustained 右侧" + buttonId);
+        }
+        }
+        });
+        ArmorDeviceService.me().HS_SetLegMoveResult(new LPFN_HS_LegMoveResult() {
+        @Override
+        public void onResult(int pos, double frontOrBack, double leftOrRight, double around) {
+        if (pos == 0) {
+        BleLog.e(TAG, "HS_SetLegMoveResult 左腿 " + pos + "  " + frontOrBack + " " + leftOrRight + " " + around);
+        } else if (pos == 1) {
+        BleLog.e(TAG, "HS_SetLegMoveResult 右腿" + pos + "  " + frontOrBack + " " + leftOrRight + " " + around);
+        }
+        }
+        });
+        }
+        
+        public void initBle() {
+            runOnUiThread(() -> {
+                BleHelper.init(GameActivity.this, new BleInitCallback() {
+                    @Override
+                    public void onSuccess() {
+                        Log.e(TAG, "初始化成功");
+                    }
+            
+                    @Override
+                    public void onFail(int code) {
+                        Log.e(TAG, "初始化失败 " + code);
+                    }
+                });
+            });
+        }
+    </insert>
+    </gameActivityClassAdditions>
+
+    <!--添加代码到OnCreate函数的Super后面-->
+    <gameActivityOnCreateAdditions> 
+    <insert>
+    
+    </insert>
+    </gameActivityOnCreateAdditions>
+    <!--插入内容到gradle.properties-->
+    <gradleProperties>
+        <insert>
+        </insert>
+    </gradleProperties>
+    <!--插入内容到baseBuildAdditions.gradle-->
+    <baseBuildGradleAdditions>
+        <insert>
+        <!-- Here goes the gradle code -->
+        </insert>
+    </baseBuildGradleAdditions>
+    <!--插入内容到buildAdditions.gradle-->
+    <buildGradleAdditions>
+        <insert>
+repositories {
+    flatDir {
+        dirs 'libs','./libs/hap'
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(dir: 'src/main/libs/hap/', include: ['*.jar', '*.aar'])
+    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'com.google.android.material:material:1.6.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    <!-- implementation project(path: ':ble_sdk') -->
+    testImplementation 'junit:junit:4.+'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    // 日志打印框架：https://github.com/JakeWharton/timber
+    implementation 'com.jakewharton.timber:timber:4.7.1'
+}
+        </insert>
+    </buildGradleAdditions>
+    <proguardAdditions>
+        <insert>
+-keep class com.ngcod.csj.** { *; }
+        </insert>
+    </proguardAdditions>
+</root>
