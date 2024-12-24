@@ -18,7 +18,6 @@ import java.lang.ref.WeakReference;
 import cn.com.heaton.blelibrary.ble.Ble;
 import cn.com.heaton.blelibrary.ble.model.BleDevice;
 import cn.com.heaton.blelibrary.BuildConfig;
-import cn.com.heaton.blelibrary.R;
 
 /**
  * OTA  Manager

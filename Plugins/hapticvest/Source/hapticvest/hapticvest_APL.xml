@@ -49,133 +49,179 @@
     <!--添加Import语句到GameActivity-->
     <gameActivityImportAdditions>
         <insert>
-            import com.longjiu.ble.service.BleHelper;
-            import com.longjiu.ble.callback.BleInitCallback;
-            import com.longjiu.ble.callback.DeviceTransferCallback;
-            import com.longjiu.ble.callback.ScanCallback;
-            import com.longjiu.ble.callback.add.LPFN_HS_ArmorMoveResult;
-            import com.longjiu.ble.callback.add.LPFN_HS_CalibrationCompleteResult;
-            import com.longjiu.ble.callback.add.LPFN_HS_DeviceStateChanged;
-            import com.longjiu.ble.callback.add.LPFN_HS_GetPowerResult;
-            import com.longjiu.ble.callback.add.LPFN_HS_InfraredEntry;
-            import com.longjiu.ble.callback.add.LPFN_HS_InfraredSustained;
-            import com.longjiu.ble.callback.add.LPFN_HS_LegMoveResult;
-            import com.longjiu.ble.callback.add.LPFN_HS_PushButtonClick;
-            import com.longjiu.ble.callback.add.LPFN_HS_PushButtonStick;
-            import com.longjiu.ble.model.BleRssiDevice;
-            import com.longjiu.ble.model.DeviceEnum;
-            import com.longjiu.ble.service.ArmorDeviceService;
-
-            import cn.com.heaton.blelibrary.ble.BleLog;
-            import cn.com.heaton.blelibrary.ble.utils.ByteUtils;
+          import com.hap.ngcod.HapUtils;
+          import com.hap.ngcod.IHapHandler;
         </insert>
     </gameActivityImportAdditions>
 
     <!--添加代码到GameActivity-->
     <gameActivityClassAdditions>
     <insert>
-        public void initEvent() {
-        //        ArmorDeviceService.me().HS_SetPrecision(ArmorDeviceServiceInterface.MODULES_CLOTHING,20);
-        //        ArmorDeviceService.me().HS_Calibration(MODULES_CLOTHING);
 
+      public native void onDeviceStateChangedN(String address, boolean state);
 
-        ArmorDeviceService.me().HS_Init();
+      public native void CalibrationCompleteResultN(int modules);
 
+      public native void PowerResultN(int deviceMode, int power);
 
-        ArmorDeviceService.me().HS_DeviceStateChanged(new LPFN_HS_DeviceStateChanged() {
-        @Override
-        public void onResult(String address, boolean state) {
-        BleLog.e(TAG, "HS_DeviceStateChanged " + state);
-        }
-        });
-        ArmorDeviceService.me().HS_CalibrationCompleteResult(new LPFN_HS_CalibrationCompleteResult() {
-        @Override
-        public void onResult(int modules) {
-        BleLog.e(TAG, "HS_CalibrationCompleteResult " + modules);
-        }
-        });
-        ArmorDeviceService.me().HS_PowerResult(new LPFN_HS_GetPowerResult() {
-        @Override
-        public void onResult(int deviceMode, int power) {
-        BleLog.e(TAG, "HS_PowerResult " + power);
-        }
-        });
-        ArmorDeviceService.me().HS_SetArmorMoveResult(new LPFN_HS_ArmorMoveResult() {
-        @Override
-        public void onResult(double frontOrBack, double leftOrRight, double around) {
-        BleLog.e(TAG, "HS_SetArmorMoveResult " + frontOrBack + " " + leftOrRight + " " + around);
-        }
-        });
-        ArmorDeviceService.me().HS_PushButtonClick(new LPFN_HS_PushButtonClick() {
-        @Override
-        public void onResult(int buttonId, boolean state) {
-        if (buttonId == DeviceEnum.LeftButton.value) {
-        BleLog.e(TAG, "HS_PushButtonClick 左侧" + buttonId + " " + state);
-        } else if (buttonId == DeviceEnum.RightButton.value) {
-        BleLog.e(TAG, "HS_PushButtonClick 右侧" + buttonId + " " + state);
-        }
-        }
-        });
-        ArmorDeviceService.me().HS_PushButtonStick(new LPFN_HS_PushButtonStick() {
-        @Override
-        public void onResult(int buttonId) {
-        BleLog.e(TAG, "HS_PushButtonStick " + buttonId);
-        }
-        });
-        ArmorDeviceService.me().HS_InfraredEntry(new LPFN_HS_InfraredEntry() {
-        @Override
-        public void onResult(int buttonId, boolean state) {
-        if (buttonId == DeviceEnum.LeftButton.value) {
-        BleLog.e(TAG, "HS_InfraredEntry 左侧" + buttonId + " " + state);
-        } else if (buttonId == DeviceEnum.RightButton.value) {
-        BleLog.e(TAG, "HS_InfraredEntry 右侧" + buttonId + " " + state);
-        }
-        }
-        });
-        ArmorDeviceService.me().HS_InfraredSustained(new LPFN_HS_InfraredSustained() {
-        @Override
-        public void onResult(int buttonId) {
-        if (buttonId == DeviceEnum.LeftInfrared.value) {
-        BleLog.e(TAG, "HS_InfraredSustained 左侧" + buttonId);
-        } else if (buttonId == DeviceEnum.RightInfrared.value) {
-        BleLog.e(TAG, "HS_InfraredSustained 右侧" + buttonId);
-        }
-        }
-        });
-        ArmorDeviceService.me().HS_SetLegMoveResult(new LPFN_HS_LegMoveResult() {
-        @Override
-        public void onResult(int pos, double frontOrBack, double leftOrRight, double around) {
-        if (pos == 0) {
-        BleLog.e(TAG, "HS_SetLegMoveResult 左腿 " + pos + "  " + frontOrBack + " " + leftOrRight + " " + around);
-        } else if (pos == 1) {
-        BleLog.e(TAG, "HS_SetLegMoveResult 右腿" + pos + "  " + frontOrBack + " " + leftOrRight + " " + around);
-        }
-        }
-        });
-        }
-        
-        public void initBle() {
-            runOnUiThread(() -> {
-                BleHelper.init(GameActivity.this, new BleInitCallback() {
-                    @Override
-                    public void onSuccess() {
-                        Log.e(TAG, "初始化成功");
-                    }
-            
-                    @Override
-                    public void onFail(int code) {
-                        Log.e(TAG, "初始化失败 " + code);
-                    }
-                });
-            });
-        }
+      public native void SetArmorMoveResultN(double frontOrBack, double leftOrRight, double around);
+
+      public native void PushButtonClickN(int buttonId, boolean state);
+
+      public native void PushButtonStickN(int buttonId);
+
+      public native void InfraredEntryN(int buttonId, boolean state);
+
+      public native void InfraredSustainedN(int buttonId);
+
+      public native void SetLegMoveResultN(int pos, double frontOrBack, double leftOrRight, double around);
+
+      public native void onInitSuccessN();
+
+      public native void onInitFailN(int code);
+
+      public native void onScanResultN(String address, String name);
+
+      public native void onConnectionChangeN(String address, int connectCode);
+
+      public native void onConnectFailedN(String address, int errorCode);
+
+      public native void onConnectCancelN(String address);
+
+      public native void onNotifySuccessN(String address);
+
+      public native void onWriteSuccessN(String address);
+
+      public native void onWriteFailedN(String address, int code);
+
+      public void initBle() {
+      HapUtils.initBle(this);
+      }
+
+      public void SetPrecision(int precision) {
+      HapUtils.SetPrecision(precision);
+      }
+
+      public void SetCalibration() {
+      HapUtils.SetCalibration();
+      }
+
+      public void shakeEngine(int motorIndex, int time) {
+      HapUtils.shakeEngine(motorIndex, time);
+      }
+
+      public void disconnect() {
+      HapUtils.disconnect();
+      }
+
+      public void connect(String deviceID) {
+      HapUtils.connect(deviceID);
+      }
+
+      public void stopScan() {
+      HapUtils.stopScan();
+      }
+
+      public void startScan() {
+      HapUtils.startScan();
+      }
     </insert>
     </gameActivityClassAdditions>
 
     <!--添加代码到OnCreate函数的Super后面-->
     <gameActivityOnCreateAdditions> 
     <insert>
-    
+      HapUtils.initEvent(new IHapHandler() {
+      @Override
+      public void onDeviceStateChanged(String address, boolean state) {
+      onDeviceStateChangedN(address, state);
+      }
+
+      @Override
+      public void CalibrationCompleteResult(int modules) {
+      CalibrationCompleteResultN(modules);
+      }
+
+      @Override
+      public void PowerResult(int deviceMode, int power) {
+      PowerResultN(deviceMode, power);
+      }
+
+      @Override
+      public void SetArmorMoveResult(double frontOrBack, double leftOrRight, double around) {
+      SetArmorMoveResultN(frontOrBack, leftOrRight, around);
+      }
+
+      @Override
+      public void PushButtonClick(int buttonId, boolean state) {
+      PushButtonClickN(buttonId, state);
+      }
+
+      @Override
+      public void PushButtonStick(int buttonId) {
+      PushButtonStickN(buttonId);
+      }
+
+      @Override
+      public void InfraredEntry(int buttonId, boolean state) {
+      InfraredEntryN(buttonId, state);
+      }
+
+      @Override
+      public void InfraredSustained(int buttonId) {
+      InfraredSustainedN(buttonId);
+      }
+
+      @Override
+      public void SetLegMoveResult(int pos, double frontOrBack, double leftOrRight, double around) {
+      SetLegMoveResultN(pos, frontOrBack, leftOrRight, around);
+      }
+
+      @Override
+      public void onInitSuccess() {
+      onInitSuccessN();
+      }
+
+      @Override
+      public void onInitFail(int code) {
+      onInitFailN(code);
+      }
+
+      @Override
+      public void onScanResult(String address, String name) {
+      onScanResultN(address, name);
+      }
+
+      @Override
+      public void onConnectionChange(String address, int connectCode) {
+      onConnectionChangeN(address, connectCode);
+      }
+
+      @Override
+      public void onConnectFailed(String address, int errorCode) {
+      onConnectFailedN(address, errorCode);
+      }
+
+      @Override
+      public void onConnectCancel(String address) {
+      onConnectCancelN(address);
+      }
+
+      @Override
+      public void onNotifySuccess(String address) {
+      onNotifySuccessN(address);
+      }
+
+      @Override
+      public void onWriteSuccess(String address) {
+      onWriteSuccessN(address);
+      }
+
+      @Override
+      public void onWriteFailed(String address, int code) {
+      onWriteFailedN(address, code);
+      }
+      });
     </insert>
     </gameActivityOnCreateAdditions>
     <!--插入内容到gradle.properties-->
