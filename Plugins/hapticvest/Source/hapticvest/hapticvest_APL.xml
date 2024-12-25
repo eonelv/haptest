@@ -32,11 +32,13 @@
         <addPermission android:name="android.permission.ACCESS_FINE_LOCATION"/>
         <addPermission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
+        <addPermission android:name="android.permission.BLUETOOTH_ADVERTISE" />
         <addPermission android:name="android.permission.BLUETOOTH_CONNECT" />
+        <addPermission android:name="android.permission.BLUETOOTH_SCAN" />
 
-       <!--<addElements tag="application">
-            <uses-feature android:name="android.hardware.bluetooth_le" android:required="true"/>
-        </addElements>-->
+      <!--<addElements tag="application">
+        <uses-feature android:name="android.hardware.bluetooth_le" android:required="true"/>
+      </addElements>-->
     </androidManifestUpdates>
 
     <!--复制文件$S(PluginDir)=插件的build.cs所在目录. $S(BuildDir)打包输出的AndroidManifest.xml所在目录-->
