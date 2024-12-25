@@ -54,7 +54,7 @@ void GameActivity_startScan(JNIEnv* Env)
 void GameActivity_connect(JNIEnv* Env, const FString& device)
 {
 	auto JavaID = FJavaHelper::ToJavaString(Env, device);
-	jmethodID MethodID = FJavaWrapper::FindMethod(Env, FJavaWrapper::GameActivityClassID, "connect", "(Ljava.lang.String;)V", false);
+	jmethodID MethodID = FJavaWrapper::FindMethod(Env, FJavaWrapper::GameActivityClassID, "connect", "(Ljava/lang/String;)V", false);
 	FJavaWrapper::CallVoidMethod(Env, FJavaWrapper::GameActivityThis, MethodID, *JavaID);
 }
 

@@ -28,6 +28,7 @@ import cn.com.heaton.blelibrary.ble.BleLog;
 public class HapUtils {
     private static final String TAG = "ngcod";
     private static IHapHandler hapHandler;
+    private static Activity gameActivity;
 
     /**
      * 设置事件
@@ -121,6 +122,7 @@ public class HapUtils {
      * 初始化
      */
     public static void initBle(Activity gameActivity) {
+        HapUtils.gameActivity = gameActivity;
         gameActivity.runOnUiThread(() -> {
             BleHelper.init(gameActivity, new BleInitCallback() {
                 @Override
@@ -164,43 +166,46 @@ public class HapUtils {
      * @param deviceID 设备ID, 应该是扫描到的设备ID。demo中是写死的.
      */
     public static void connect(String deviceID) {
-        BleHelper.connect(deviceID, new DeviceTransferCallback() {
-            @Override
-            public void onConnectionChanged(String address, int connectCode) {
-                HapUtils.hapHandler.onConnectionChange(address, connectCode);
-                Log.e(TAG, "onConnectionChanged : " + connectCode + " address :" + address);
-            }
+        HapUtils.gameActivity.runOnUiThread(() -> {
+            BleHelper.connect(deviceID, new DeviceTransferCallback() {
+                @Override
+                public void onConnectionChanged(String address, int connectCode) {
+                    HapUtils.hapHandler.onConnectionChange(address, connectCode);
+                    Log.e(TAG, "onConnectionChanged : " + connectCode + " address :" + address);
+                }
 
-            @Override
-            public void onConnectFailed(String address, int errorCode) {
-                HapUtils.hapHandler.onConnectFailed(address, errorCode);
-                Log.e(TAG, "onConnectFailed  " + " address :" + address);
-            }
+                @Override
+                public void onConnectFailed(String address, int errorCode) {
+                    HapUtils.hapHandler.onConnectFailed(address, errorCode);
+                    Log.e(TAG, "onConnectFailed  " + " address :" + address);
+                }
 
-            @Override
-            public void onConnectCancel(String address) {
-                HapUtils.hapHandler.onConnectCancel(address);
-                Log.e(TAG, "onConnectCancel  ");
-            }
+                @Override
+                public void onConnectCancel(String address) {
+                    HapUtils.hapHandler.onConnectCancel(address);
+                    Log.e(TAG, "onConnectCancel  ");
+                }
 
-            @Override
-            public void onNotifySuccess(String address) {
-                HapUtils.hapHandler.onNotifySuccess(address);
-                Log.e(TAG, "onNotifySuccess  ");
-            }
+                @Override
+                public void onNotifySuccess(String address) {
+                    HapUtils.hapHandler.onNotifySuccess(address);
+                    Log.e(TAG, "onNotifySuccess  ");
+                }
 
-            @Override
-            public void onWriteSuccess(String address) {
-                HapUtils.hapHandler.onWriteSuccess(address);
-                Log.e(TAG, "onWriteSuccess");
-            }
+                @Override
+                public void onWriteSuccess(String address) {
+                    HapUtils.hapHandler.onWriteSuccess(address);
+                    Log.e(TAG, "onWriteSuccess");
+                }
 
-            @Override
-            public void onWriteFailed(String address, int code) {
-                HapUtils.hapHandler.onWriteFailed(address, code);
-                Log.e(TAG, "onWriteFailed : " + code);
-            }
+                @Override
+                public void onWriteFailed(String address, int code) {
+                    HapUtils.hapHandler.onWriteFailed(address, code);
+                    Log.e(TAG, "onWriteFailed : " + code);
+                }
+            });
         });
+
     }
 
     /**

@@ -53,6 +53,8 @@
         <insert>
           import com.hap.ngcod.HapUtils;
           import com.hap.ngcod.IHapHandler;
+          import android.Manifest;
+          import androidx.core.app.ActivityCompat;
         </insert>
     </gameActivityImportAdditions>
 
@@ -96,6 +98,20 @@
 
       public native void onWriteFailedN(String address, int code);
 
+      public void requestPermissions()
+      {
+      this.runOnUiThread(() -> {
+      /*ActivityCompat.requestPermissions(this, new String[]{
+      Manifest.permission.ACCESS_COARSE_LOCATION,
+      Manifest.permission.ACCESS_FINE_LOCATION
+      }, 0x0010);*/
+      PermissionHelper.acquirePermissions(new String[]{
+      Manifest.permission.ACCESS_COARSE_LOCATION,
+      Manifest.permission.ACCESS_FINE_LOCATION
+      });
+      });
+      }
+
       public void initBle() {
       HapUtils.initBle(this);
       }
@@ -133,6 +149,7 @@
     <!--添加代码到OnCreate函数的Super后面-->
     <gameActivityOnCreateAdditions> 
     <insert>
+      requestPermissions();
       HapUtils.initEvent(new IHapHandler() {
       @Override
       public void onDeviceStateChanged(String address, boolean state) {
@@ -226,6 +243,16 @@
       });
     </insert>
     </gameActivityOnCreateAdditions>
+  <gameActivityOnRequestPermissionsResultAdditions>
+    <insert>
+      if (PermissionHelper.checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION) <![CDATA[ && ]]> PermissionHelper.checkPermission(Manifest.permission.ACCESS_FINE_LOCATION)){
+      this.initBle();
+      }
+      for (int i=0; i <![CDATA[ < ]]> permissions.length; i++) {
+			  Log.debug("请求权限结果:" + permissions[i] + ", " + grantResults[i]);
+		  }
+    </insert>
+  </gameActivityOnRequestPermissionsResultAdditions>
     <!--插入内容到gradle.properties-->
     <gradleProperties>
         <insert>
@@ -253,17 +280,17 @@ dependencies {
     implementation 'com.google.android.material:material:1.6.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     <!-- implementation project(path: ':ble_sdk') -->
-    testImplementation 'junit:junit:4.+'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-    // 日志打印框架：https://github.com/JakeWharton/timber
-    implementation 'com.jakewharton.timber:timber:4.7.1'
-}
+          testImplementation 'junit:junit:4.+'
+          androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+          androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+          // 日志打印框架：https://github.com/JakeWharton/timber
+          implementation 'com.jakewharton.timber:timber:4.7.1'
+          }
         </insert>
     </buildGradleAdditions>
     <proguardAdditions>
         <insert>
--keep class com.ngcod.csj.** { *; }
+-keep class com.hap.ngcod.** { *; }
         </insert>
     </proguardAdditions>
 </root>
