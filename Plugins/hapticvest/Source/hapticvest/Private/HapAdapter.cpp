@@ -46,6 +46,7 @@ void GameActivity_stopScan(JNIEnv* Env)
 
 void GameActivity_startScan(JNIEnv* Env)
 {
+	UE_LOG(LogTemp, Warning, TEXT("ready to call java method"));
 	jmethodID MethodID = FJavaWrapper::FindMethod(Env, FJavaWrapper::GameActivityClassID, "startScan", "()V", false);
 	FJavaWrapper::CallVoidMethod(Env, FJavaWrapper::GameActivityThis, MethodID);
 }
@@ -163,6 +164,7 @@ JNI_METHOD void Java_com_epicgames_unreal_GameActivity_onScanResultN(JNIEnv* Env
 {
 	FString fAddress = FJavaHelper::FStringFromLocalRef(Env, address);
 	FString fName = FJavaHelper::FStringFromLocalRef(Env, name);
+	UE_LOG(LogTemp, Warning, TEXT("scan results:%s-%s"), *fAddress, *fName);
 	CheckReturn(HapAdapter::CallBackHandler)
 		FGraphEventRef task = FFunctionGraphTask::CreateAndDispatchWhenReady([=]()
 			{

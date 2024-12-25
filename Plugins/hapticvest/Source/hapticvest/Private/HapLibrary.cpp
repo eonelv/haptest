@@ -64,6 +64,7 @@ void UHapLibrary::stopScan()
 
 void UHapLibrary::startScan()
 {
+	UE_LOG(LogTemp, Warning, TEXT("blueprint begin scan device"));
 	HapAdapter::startScan();
 }
 

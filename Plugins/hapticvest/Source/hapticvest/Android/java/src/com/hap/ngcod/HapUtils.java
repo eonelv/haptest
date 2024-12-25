@@ -26,7 +26,7 @@ import com.longjiu.ble.service.BleHelper;
 import cn.com.heaton.blelibrary.ble.BleLog;
 
 public class HapUtils {
-    private static final String TAG = "HapUtils";
+    private static final String TAG = "ngcod";
     private static IHapHandler hapHandler;
 
     /**
@@ -127,7 +127,6 @@ public class HapUtils {
                 public void onSuccess() {
                     HapUtils.hapHandler.onInitSuccess();
                     BleLog.d(TAG, "初始化成功 ");
-
                 }
 
                 @Override
@@ -143,6 +142,7 @@ public class HapUtils {
      * 开始扫描
      */
     public static void startScan() {
+        Log.e(TAG, "调用BleHelper.startScan");
         BleHelper.startScan(new ScanCallback() {
             @Override
             public void onScanResult(BleRssiDevice bleRssiDevice) {
