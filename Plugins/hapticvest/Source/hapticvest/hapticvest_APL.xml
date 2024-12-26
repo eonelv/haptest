@@ -98,6 +98,31 @@
 
       public native void onWriteFailedN(String address, int code);
 
+      public ArrayList<![CDATA[ < ]]>String> getUngrantedPermissions(Context context, String[] requiredPermissions)
+	      {
+		      ArrayList<![CDATA[ < ]]>String> ungrantedPermissions = new ArrayList<![CDATA[ < ]]>>();
+		      for (String required : requiredPermissions)
+		      {
+			      if (!PermissionHelper.checkPermission(required))
+			      {
+				      ungrantedPermissions.add(required);
+			      }
+		      }
+		      return ungrantedPermissions;
+	      }
+
+	      private void initStart() {
+	        List<![CDATA[ < ]]>String> ungrantedPermission = this.getUngrantedPermissions(this, new String[]{
+			        Manifest.permission.ACCESS_COARSE_LOCATION,
+			        Manifest.permission.ACCESS_FINE_LOCATION
+	        });
+	        if (!ungrantedPermission.isEmpty()) {
+		        requestPermissions();
+	        } else {
+		        initBle();
+	        }
+	      }
+  
       public void requestPermissions()
       {
       this.runOnUiThread(() -> {
@@ -149,8 +174,14 @@
     <!--添加代码到OnCreate函数的Super后面-->
     <gameActivityOnCreateAdditions> 
     <insert>
-      requestPermissions();
-      HapUtils.initEvent(new IHapHandler() {
+      
+      
+    </insert>
+    </gameActivityOnCreateAdditions>
+  
+  <gameActivityOnStartAdditions>
+    <insert>    
+  HapUtils.initEvent(new IHapHandler() {
       @Override
       public void onDeviceStateChanged(String address, boolean state) {
       onDeviceStateChangedN(address, state);
@@ -241,13 +272,16 @@
       onWriteFailedN(address, code);
       }
       });
+      
+  initStart();
     </insert>
-    </gameActivityOnCreateAdditions>
+    </gameActivityOnStartAdditions>
   <gameActivityOnRequestPermissionsResultAdditions>
     <insert>
       if (PermissionHelper.checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION) <![CDATA[ && ]]> PermissionHelper.checkPermission(Manifest.permission.ACCESS_FINE_LOCATION)){
       this.initBle();
       }
+      Log.debug("请求权限结果:");
       for (int i=0; i <![CDATA[ < ]]> permissions.length; i++) {
 			  Log.debug("请求权限结果:" + permissions[i] + ", " + grantResults[i]);
 		  }

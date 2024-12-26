@@ -28,7 +28,7 @@ FOnStringInt UHapLibrary::onWriteFailed;
 
 void UHapLibrary::Init()
 {
-	HapAdapter::Init();
+	//HapAdapter::Init();
 	HapAdapter::CallBackHandler = HapCallbackHandler::Get();
 }
 
