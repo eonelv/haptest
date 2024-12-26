@@ -3,6 +3,8 @@ package cn.com.heaton.blelibrary.ota;
 import android.os.Handler;
 import android.util.Log;
 
+import com.ngcod.hapticvest1.BuildConfig;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Arrays;
@@ -11,7 +13,6 @@ import java.util.concurrent.Semaphore;
 
 import cn.com.heaton.blelibrary.ble.Ble;
 import cn.com.heaton.blelibrary.ble.model.BleDevice;
-import cn.com.heaton.blelibrary.BuildConfig;
 
 /**
  * OTA Update Manager

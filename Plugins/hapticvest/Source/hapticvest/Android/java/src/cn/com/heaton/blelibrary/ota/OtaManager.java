@@ -17,7 +17,6 @@ import java.lang.ref.WeakReference;
 
 import cn.com.heaton.blelibrary.ble.Ble;
 import cn.com.heaton.blelibrary.ble.model.BleDevice;
-import cn.com.heaton.blelibrary.BuildConfig;
 
 /**
  * OTA  Manager
@@ -50,9 +49,9 @@ public class OtaManager {
 		public void dispatchMessage(Message msg) {
 //			final OtaManager otaManager = weakReference.get();
 			if (otaManager != null) {
-				if (BuildConfig.DEBUG) {
-					Log.i(TAG, "dispatchMessage:" + msg.what);
-				}
+//				if (BuildConfig.DEBUG) {
+//					Log.i(TAG, "dispatchMessage:" + msg.what);
+//				}
 				Integer idx = (Integer) msg.obj;
 				BleOtaUpdater updater = null;
 				BleDevice bleDevice = null;
@@ -202,9 +201,9 @@ public class OtaManager {
 				return true;
 			}
 		} catch (IOException e) {
-			if (BuildConfig.DEBUG) {
-				e.printStackTrace();
-			}
+//			if (BuildConfig.DEBUG) {
+//				e.printStackTrace();
+//			}
 		}
 		return false;
 	}

@@ -30,6 +30,7 @@ import android.os.Build;
 import android.os.Handler;
 
 
+import com.ngcod.hapticvest1.BuildConfig;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -40,7 +41,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import cn.com.heaton.blelibrary.BuildConfig;
 import cn.com.heaton.blelibrary.ble.callback.wrapper.ConnectWrapperCallback;
 import cn.com.heaton.blelibrary.ble.callback.wrapper.DescWrapperCallback;
 import cn.com.heaton.blelibrary.ble.callback.wrapper.MtuWrapperCallback;
