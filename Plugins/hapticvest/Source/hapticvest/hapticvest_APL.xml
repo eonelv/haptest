@@ -113,16 +113,16 @@
 
 	      private void initStart() {
 	        List<![CDATA[ < ]]>String> ungrantedPermission = this.getUngrantedPermissions(this, new String[]{
-			        Manifest.permission.ACCESS_COARSE_LOCATION,
-			        Manifest.permission.ACCESS_FINE_LOCATION
-	        });
-	        if (!ungrantedPermission.isEmpty()) {
-		        requestPermissions();
-	        } else {
-		        initBle();
-	        }
-	      }
-  
+      Manifest.permission.ACCESS_COARSE_LOCATION,
+      Manifest.permission.ACCESS_FINE_LOCATION
+      });
+      if (!ungrantedPermission.isEmpty()) {
+      requestPermissions();
+      } else {
+      initBle();
+      }
+      }
+
       public void requestPermissions()
       {
       this.runOnUiThread(() -> {
@@ -165,8 +165,14 @@
       HapUtils.stopScan();
       }
 
+      private boolean isNeedScan = false;
       public void startScan() {
+      if (!HapUtils.bInited) {
+      this.isNeedScan = true;
+      this.initStart();
+      } else {
       HapUtils.startScan();
+      }
       }
     </insert>
     </gameActivityClassAdditions>
@@ -180,8 +186,8 @@
     </gameActivityOnCreateAdditions>
   
   <gameActivityOnStartAdditions>
-    <insert>    
-  HapUtils.initEvent(new IHapHandler() {
+    <insert>
+      HapUtils.initEvent(new IHapHandler() {
       @Override
       public void onDeviceStateChanged(String address, boolean state) {
       onDeviceStateChangedN(address, state);
@@ -230,6 +236,9 @@
       @Override
       public void onInitSuccess() {
       onInitSuccessN();
+      if (GameActivity.this.isNeedScan) {
+      HapUtils.startScan();
+      }
       }
 
       @Override
@@ -272,8 +281,8 @@
       onWriteFailedN(address, code);
       }
       });
-      
-  initStart();
+
+      initStart();
     </insert>
     </gameActivityOnStartAdditions>
   <gameActivityOnRequestPermissionsResultAdditions>

@@ -29,6 +29,7 @@ public class HapUtils {
     private static final String TAG = "ngcod";
     private static IHapHandler hapHandler;
     private static Activity gameActivity;
+    public static boolean bInited = false;
 
     /**
      * 设置事件
@@ -122,6 +123,10 @@ public class HapUtils {
      * 初始化
      */
     public static void initBle(Activity gameActivity) {
+        if (HapUtils.bInited) {
+            return;
+        }
+        HapUtils.bInited = true;
         HapUtils.gameActivity = gameActivity;
         gameActivity.runOnUiThread(() -> {
             BleHelper.init(gameActivity, new BleInitCallback() {
