@@ -59,8 +59,11 @@ void GameActivity_connect(JNIEnv* Env, const FString& device)
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
-
+#if ENGINE_MAJOR_VERSION >= 5
 JNI_METHOD void Java_com_epicgames_unreal_GameActivity_onDeviceStateChangedN(JNIEnv* Env, jobject LocalThisz, jstring address, jboolean state)
+#else
+JNI_METHOD void Java_com_epicgames_ue4_GameActivity_onDeviceStateChangedN(JNIEnv* Env, jobject LocalThisz, jstring address, jboolean state)
+#endif
 {
 	FString message = FJavaHelper::FStringFromLocalRef(Env, address);
 	CheckReturn(HapAdapter::CallBackHandler)
@@ -69,8 +72,11 @@ JNI_METHOD void Java_com_epicgames_unreal_GameActivity_onDeviceStateChangedN(JNI
 			HapAdapter::CallBackHandler->onDeviceStateChanged(message, (bool)state);
 		}, TStatId(), nullptr, ENamedThreads::GameThread);
 }
-
+#if ENGINE_MAJOR_VERSION >= 5
 JNI_METHOD void Java_com_epicgames_unreal_GameActivity_CalibrationCompleteResultN(JNIEnv* Env, jobject LocalThisz, jint modules)
+#else
+JNI_METHOD void Java_com_epicgames_ue4_GameActivity_CalibrationCompleteResultN(JNIEnv* Env, jobject LocalThisz, jint modules)
+#endif
 {
 	CheckReturn(HapAdapter::CallBackHandler)
 	FGraphEventRef task = FFunctionGraphTask::CreateAndDispatchWhenReady([=]()
@@ -79,7 +85,11 @@ JNI_METHOD void Java_com_epicgames_unreal_GameActivity_CalibrationCompleteResult
 		}, TStatId(), nullptr, ENamedThreads::GameThread);
 }
 
+#if ENGINE_MAJOR_VERSION >= 5
 JNI_METHOD void Java_com_epicgames_unreal_GameActivity_PowerResultN(JNIEnv* Env, jobject LocalThisz, jint deviceMode, jint power)
+#else
+JNI_METHOD void Java_com_epicgames_ue4_GameActivity_PowerResultN(JNIEnv* Env, jobject LocalThisz, jint deviceMode, jint power)
+#endif
 {
 	CheckReturn(HapAdapter::CallBackHandler)
 		FGraphEventRef task = FFunctionGraphTask::CreateAndDispatchWhenReady([=]()
@@ -88,7 +98,11 @@ JNI_METHOD void Java_com_epicgames_unreal_GameActivity_PowerResultN(JNIEnv* Env,
 			}, TStatId(), nullptr, ENamedThreads::GameThread);
 }
 
+#if ENGINE_MAJOR_VERSION >= 5
 JNI_METHOD void Java_com_epicgames_unreal_GameActivity_SetArmorMoveResultN(JNIEnv* Env, jobject LocalThisz, jdouble frontOrBack, jdouble leftOrRight, jdouble around)
+#else
+JNI_METHOD void Java_com_epicgames_ue4_GameActivity_SetArmorMoveResultN(JNIEnv* Env, jobject LocalThisz, jdouble frontOrBack, jdouble leftOrRight, jdouble around)
+#endif
 {
 	CheckReturn(HapAdapter::CallBackHandler)
 		FGraphEventRef task = FFunctionGraphTask::CreateAndDispatchWhenReady([=]()
@@ -97,7 +111,11 @@ JNI_METHOD void Java_com_epicgames_unreal_GameActivity_SetArmorMoveResultN(JNIEn
 			}, TStatId(), nullptr, ENamedThreads::GameThread);
 }
 
+#if ENGINE_MAJOR_VERSION >= 5
 JNI_METHOD void Java_com_epicgames_unreal_GameActivity_PushButtonClickN(JNIEnv* Env, jobject LocalThisz, jint buttonId, jboolean state)
+#else
+JNI_METHOD void Java_com_epicgames_ue4_GameActivity_PushButtonClickN(JNIEnv* Env, jobject LocalThisz, jint buttonId, jboolean state)
+#endif
 {
 	CheckReturn(HapAdapter::CallBackHandler)
 		FGraphEventRef task = FFunctionGraphTask::CreateAndDispatchWhenReady([=]()
@@ -106,7 +124,11 @@ JNI_METHOD void Java_com_epicgames_unreal_GameActivity_PushButtonClickN(JNIEnv* 
 			}, TStatId(), nullptr, ENamedThreads::GameThread);
 }
 
+#if ENGINE_MAJOR_VERSION >= 5
 JNI_METHOD void Java_com_epicgames_unreal_GameActivity_PushButtonStickN(JNIEnv* Env, jobject LocalThisz, jint buttonId)
+#else
+JNI_METHOD void Java_com_epicgames_ue4_GameActivity_PushButtonStickN(JNIEnv* Env, jobject LocalThisz, jint buttonId)
+#endif
 {
 	CheckReturn(HapAdapter::CallBackHandler)
 		FGraphEventRef task = FFunctionGraphTask::CreateAndDispatchWhenReady([=]()
@@ -115,7 +137,11 @@ JNI_METHOD void Java_com_epicgames_unreal_GameActivity_PushButtonStickN(JNIEnv* 
 			}, TStatId(), nullptr, ENamedThreads::GameThread);
 }
 
+#if ENGINE_MAJOR_VERSION >= 5
 JNI_METHOD void Java_com_epicgames_unreal_GameActivity_InfraredEntryN(JNIEnv* Env, jobject LocalThisz, jint buttonId, jboolean state)
+#else
+JNI_METHOD void Java_com_epicgames_ue4_GameActivity_InfraredEntryN(JNIEnv* Env, jobject LocalThisz, jint buttonId, jboolean state)
+#endif
 {
 	CheckReturn(HapAdapter::CallBackHandler)
 		FGraphEventRef task = FFunctionGraphTask::CreateAndDispatchWhenReady([=]()
@@ -124,7 +150,11 @@ JNI_METHOD void Java_com_epicgames_unreal_GameActivity_InfraredEntryN(JNIEnv* En
 			}, TStatId(), nullptr, ENamedThreads::GameThread);
 }
 
+#if ENGINE_MAJOR_VERSION >= 5
 JNI_METHOD void Java_com_epicgames_unreal_GameActivity_InfraredSustainedN(JNIEnv* Env, jobject LocalThisz, jint buttonId)
+#else
+JNI_METHOD void Java_com_epicgames_ue4_GameActivity_InfraredSustainedN(JNIEnv* Env, jobject LocalThisz, jint buttonId)
+#endif
 {
 	CheckReturn(HapAdapter::CallBackHandler)
 		FGraphEventRef task = FFunctionGraphTask::CreateAndDispatchWhenReady([=]()
@@ -133,7 +163,11 @@ JNI_METHOD void Java_com_epicgames_unreal_GameActivity_InfraredSustainedN(JNIEnv
 			}, TStatId(), nullptr, ENamedThreads::GameThread);
 }
 
+#if ENGINE_MAJOR_VERSION >= 5
 JNI_METHOD void Java_com_epicgames_unreal_GameActivity_SetLegMoveResultN(JNIEnv* Env, jobject LocalThisz, jint pos, jdouble frontOrBack, jdouble leftOrRight, jdouble around)
+#else
+JNI_METHOD void Java_com_epicgames_ue4_GameActivity_SetLegMoveResultN(JNIEnv* Env, jobject LocalThisz, jint pos, jdouble frontOrBack, jdouble leftOrRight, jdouble around)
+#endif
 {
 	CheckReturn(HapAdapter::CallBackHandler)
 		FGraphEventRef task = FFunctionGraphTask::CreateAndDispatchWhenReady([=]()
@@ -142,7 +176,11 @@ JNI_METHOD void Java_com_epicgames_unreal_GameActivity_SetLegMoveResultN(JNIEnv*
 			}, TStatId(), nullptr, ENamedThreads::GameThread);
 }
 
+#if ENGINE_MAJOR_VERSION >= 5
 JNI_METHOD void Java_com_epicgames_unreal_GameActivity_onInitSuccessN(JNIEnv* Env, jobject LocalThisz)
+#else
+JNI_METHOD void Java_com_epicgames_ue4_GameActivity_onInitSuccessN(JNIEnv* Env, jobject LocalThisz)
+#endif
 {
 	CheckReturn(HapAdapter::CallBackHandler)
 		FGraphEventRef task = FFunctionGraphTask::CreateAndDispatchWhenReady([=]()
@@ -151,7 +189,11 @@ JNI_METHOD void Java_com_epicgames_unreal_GameActivity_onInitSuccessN(JNIEnv* En
 			}, TStatId(), nullptr, ENamedThreads::GameThread);
 }
 
+#if ENGINE_MAJOR_VERSION >= 5
 JNI_METHOD void Java_com_epicgames_unreal_GameActivity_onInitFailN(JNIEnv* Env, jobject LocalThisz, jint code)
+#else
+JNI_METHOD void Java_com_epicgames_ue4_GameActivity_onInitFailN(JNIEnv* Env, jobject LocalThisz, jint code)
+#endif
 {
 	CheckReturn(HapAdapter::CallBackHandler)
 		FGraphEventRef task = FFunctionGraphTask::CreateAndDispatchWhenReady([=]()
@@ -160,7 +202,11 @@ JNI_METHOD void Java_com_epicgames_unreal_GameActivity_onInitFailN(JNIEnv* Env, 
 			}, TStatId(), nullptr, ENamedThreads::GameThread);
 }
 
+#if ENGINE_MAJOR_VERSION >= 5
 JNI_METHOD void Java_com_epicgames_unreal_GameActivity_onScanResultN(JNIEnv* Env, jobject LocalThisz, jstring address, jstring name)
+#else
+JNI_METHOD void Java_com_epicgames_ue4_GameActivity_onScanResultN(JNIEnv* Env, jobject LocalThisz, jstring address, jstring name)
+#endif
 {
 	FString fAddress = FJavaHelper::FStringFromLocalRef(Env, address);
 	FString fName = FJavaHelper::FStringFromLocalRef(Env, name);
@@ -172,7 +218,11 @@ JNI_METHOD void Java_com_epicgames_unreal_GameActivity_onScanResultN(JNIEnv* Env
 			}, TStatId(), nullptr, ENamedThreads::GameThread);
 }
 
+#if ENGINE_MAJOR_VERSION >= 5
 JNI_METHOD void Java_com_epicgames_unreal_GameActivity_onConnectionChangeN(JNIEnv* Env, jobject LocalThisz, jstring address, jint connectCode)
+#else
+JNI_METHOD void Java_com_epicgames_ue4_GameActivity_onConnectionChangeN(JNIEnv* Env, jobject LocalThisz, jstring address, jint connectCode)
+#endif
 {
 	FString fAddress = FJavaHelper::FStringFromLocalRef(Env, address);
 	CheckReturn(HapAdapter::CallBackHandler)
@@ -182,7 +232,11 @@ JNI_METHOD void Java_com_epicgames_unreal_GameActivity_onConnectionChangeN(JNIEn
 			}, TStatId(), nullptr, ENamedThreads::GameThread);
 }
 
+#if ENGINE_MAJOR_VERSION >= 5
 JNI_METHOD void Java_com_epicgames_unreal_GameActivity_onConnectFailedN(JNIEnv* Env, jobject LocalThisz, jstring address, jint connectCode)
+#else
+JNI_METHOD void Java_com_epicgames_ue4_GameActivity_onConnectFailedN(JNIEnv* Env, jobject LocalThisz, jstring address, jint connectCode)
+#endif
 {
 	FString fAddress = FJavaHelper::FStringFromLocalRef(Env, address);
 	CheckReturn(HapAdapter::CallBackHandler)
@@ -192,7 +246,11 @@ JNI_METHOD void Java_com_epicgames_unreal_GameActivity_onConnectFailedN(JNIEnv* 
 			}, TStatId(), nullptr, ENamedThreads::GameThread);
 }
 
+#if ENGINE_MAJOR_VERSION >= 5
 JNI_METHOD void Java_com_epicgames_unreal_GameActivity_onConnectCancelN(JNIEnv* Env, jobject LocalThisz, jstring address)
+#else
+JNI_METHOD void Java_com_epicgames_ue4_GameActivity_onConnectCancelN(JNIEnv* Env, jobject LocalThisz, jstring address)
+#endif
 {
 	FString fAddress = FJavaHelper::FStringFromLocalRef(Env, address);
 	CheckReturn(HapAdapter::CallBackHandler)
@@ -202,7 +260,11 @@ JNI_METHOD void Java_com_epicgames_unreal_GameActivity_onConnectCancelN(JNIEnv* 
 			}, TStatId(), nullptr, ENamedThreads::GameThread);
 }
 
+#if ENGINE_MAJOR_VERSION >= 5
 JNI_METHOD void Java_com_epicgames_unreal_GameActivity_onNotifySuccessN(JNIEnv* Env, jobject LocalThisz, jstring address)
+#else
+JNI_METHOD void Java_com_epicgames_ue4_GameActivity_onNotifySuccessN(JNIEnv* Env, jobject LocalThisz, jstring address)
+#endif
 {
 	FString fAddress = FJavaHelper::FStringFromLocalRef(Env, address);
 	CheckReturn(HapAdapter::CallBackHandler)
@@ -212,7 +274,11 @@ JNI_METHOD void Java_com_epicgames_unreal_GameActivity_onNotifySuccessN(JNIEnv* 
 			}, TStatId(), nullptr, ENamedThreads::GameThread);
 }
 
+#if ENGINE_MAJOR_VERSION >= 5
 JNI_METHOD void Java_com_epicgames_unreal_GameActivity_onWriteSuccessN(JNIEnv* Env, jobject LocalThisz, jstring address)
+#else
+JNI_METHOD void Java_com_epicgames_ue4_GameActivity_onWriteSuccessN(JNIEnv* Env, jobject LocalThisz, jstring address)
+#endif
 {
 	FString fAddress = FJavaHelper::FStringFromLocalRef(Env, address);
 	CheckReturn(HapAdapter::CallBackHandler)
@@ -222,8 +288,11 @@ JNI_METHOD void Java_com_epicgames_unreal_GameActivity_onWriteSuccessN(JNIEnv* E
 			}, TStatId(), nullptr, ENamedThreads::GameThread);
 }
 
-
+#if ENGINE_MAJOR_VERSION >= 5
 JNI_METHOD void Java_com_epicgames_unreal_GameActivity_onWriteFailedN(JNIEnv* Env, jobject LocalThisz, jstring address, jint code)
+#else
+JNI_METHOD void Java_com_epicgames_ue4_GameActivity_onWriteFailedN(JNIEnv* Env, jobject LocalThisz, jstring address, jint code)
+#endif
 {
 	FString fAddress = FJavaHelper::FStringFromLocalRef(Env, address);
 	CheckReturn(HapAdapter::CallBackHandler)
